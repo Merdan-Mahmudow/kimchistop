@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>KIMCHISTOP ADMIN</title>
+    </head>
+    <body>
+        <input type="text" id="input">
+        <input type="submit" value="Send" id="send">
+
+        <script>
+            var ws = new WebSocket("/order/ws");
+            const input = document.querySelector("#input");
+            const send = document.querySelector("#send")
+            send.addEventListener("click", () => {
+                ws.send(input.value);
+            })
+        </script>
+    </body>
+</html>

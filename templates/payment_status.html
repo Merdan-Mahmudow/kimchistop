@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1 class="status"></h1>
+</body>
+<script>
+    axios.get('/payments/{{payment}}').then(e => {
+        if (e.data.status == "pending"){
+            document.querySelector(".status").innerHTML = "Ожидаем ответ от банка"
+        } else if (e.data.status == "succeeded") {
+            document.querySelector(".status").innerHTML = "Оплата прошла успешно"
+        }
+    })
+    
+</script>
+</html>

@@ -9,6 +9,8 @@ class User(BaseModel):
     nickname: Optional[str] = None
     chatID: Optional[str] = None
     favourites: Optional[list[int]] = []
+    role: Optional[str]
+
 
 class Order(BaseModel):
     number: Optional[int] = None
@@ -34,3 +36,13 @@ class Food(BaseModel):
     description: Optional[str] = None
     image: Optional[str] = None
     category: Optional[int] = None
+
+class Promo(BaseModel):
+    code: Optional[str] = None
+    isPercent: Optional[bool] = None
+    discount: Optional[int] = None
+    maxUse: Optional[int] = None
+    used: Optional[list[int]] = []
+    desc: Optional[str] = None
+
+    

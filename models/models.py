@@ -13,6 +13,7 @@ class User(Base):
     nickname = Column(String, nullable=True)
     chatID = Column(String, nullable=True)
     favourites = Column(ARRAY(Integer), nullable=True)
+    role = Column(String, nullable=True)
     
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__tablename__.columns}
@@ -57,10 +58,16 @@ class Food(Base):
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__tablename__.columns}
-
-
-
-
+    
+class Promo(Base):
+    __tablename__ = "promo"
+    id = Column(Integer, unique=True, primary_key=True)
+    code = Column(String, nullable=False)
+    isPercent = Column(Boolean)
+    discount = Column(Integer, nullable=False)
+    maxUse = Column(Integer, nullable=False)
+    used = Column(ARRAY(Integer), nullable=False)
+    desc = Column(String, nullable=True)
 
 # class rating(Base) :
 #     __tablename__ = "rating"

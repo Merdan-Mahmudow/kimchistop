@@ -7,7 +7,13 @@ app = FastAPI(tags=["Freestyle BOT"])
 
 origins = [
     "http://localhost:3000",
-    "https://skyrodev.ru"
+    "https://skyrodev.ru",
+    "http://0.0.0.0:8000",
+    "https://backend.skyrodev.ru",
+    "http://127.0.0.1:3000",
+    "https://kimchistop.ru",
+    "https://api.kimchistop.ru"
+
 ]
 
 app.add_middleware(

@@ -52,6 +52,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from auth.database import get_async_session
 from dto import dto as DTO
 from models.models import *
+# from .routers import user_state as us
 import requests
 
 userRouter = APIRouter()
@@ -70,6 +71,8 @@ def isNull(value):
 
 # State dictionary to store user objects
 user_state = {}
+
+
 
 @userRouter.post('/setstate')
 async def user_get(nickname: str, session: AsyncSession = Depends(get_async_session)):
@@ -153,6 +156,8 @@ async def user_patch(nickname: str, userDTO: DTO.User, session: AsyncSession = D
 async def get_favourites(nickname: str, session: AsyncSession = Depends(get_async_session)):
     try:
         foods = []
+        if user_state[nickname].favourites is None:
+            return foods
         for i in range(len(user_state[nickname].favourites)):
             print(user_state[nickname].favourites[i])
             query = select(Food).where(Food.id == user_state[nickname].favourites[i])
@@ -189,8 +194,6 @@ async def add_favourite(nickname: str, favourite_item: int, session: AsyncSessio
         return foods
     except Exception as e:
         await session.rollback()
-        if not fav:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @userRouter.delete('/{nickname}')
@@ -209,3 +212,19 @@ async def user_delete(nickname: str, session: AsyncSession = Depends(get_async_s
     except Exception as e:
         await session.rollback()
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+@userRouter.patch('/role/{nickname}')
+async def user_role(nickname: str, role: str, session: AsyncSession = Depends(get_async_session)):
+    try:
+        # Update user in database
+        query = update(User).where(User.nickname == nickname).values(role=role)
+        await session.execute(query)
+        await session.commit()
+
+        # Update user in state
+        if nickname in user_state:
+            user_state[nickname].role = role
+        return {"message": "User role updated successfully"}
+    except Exception as e:
+        await session.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+

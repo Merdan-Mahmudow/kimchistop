@@ -2,34 +2,23 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Прием платежа с помощью виджета ЮKassa</title>
+  <title>Оплата заказа</title>
 
   <!--Подключение библиотеки для инициализации виджета ЮKassa-->
   <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
  </head>
  <body>
-  Ниже отобразится платежная форма. Если вы еще не создавали платеж и не передавали токен для инициализации виджета, появится сообщение об ошибке.
-
   <!--Контейнер, в котором будет отображаться платежная форма-->
   <div id="payment-form"></div>
-
-  Данные банковской карты для оплаты в <b>тестовом магазине</b>:
-
-   - номер — <b>5555 5555 5555 4477</b>
-   - срок действия — <b>01/30</b> (или другая дата, больше текущей)
-   - CVC — <b>123</b> (или три любые цифры)
-   - код для прохождения 3-D Secure — <b>123</b> (или три любые цифры)
-  <h1>{{ amount }} {{ description }} </h1>
-  <a href=https://yookassa.ru/developers/payment-acceptance/testing-and-going-live/testing#test-bank-card>Другие тестовые банковские карты</a>
-
   <script>
+    console.log({{payment_id}})
 axios.post('/payments/?amount={{ amount }}&description={{ description }}').then((e) => {
     
   //Инициализация виджета. Все параметры обязательные.
   const checkout = new window.YooMoneyCheckoutWidget({
-      confirmation_token: e.data, //Токен, который перед проведением оплаты нужно получить от ЮKassa
-      return_url: 'https://skyrodev.ru', //Ссылка на страницу завершения оплаты, это может быть любая ваша страница
+      confirmation_token: e.data.confirmation.confirmation_token, //Токен, который перед проведением оплаты нужно получить от ЮKassa
+      return_url: 'https://backend.skyrodev.ru/payments/payment-status/' + e.data.id, //Ссылка на страницу завершения оплаты, это может быть любая ваша страница
 
       //При необходимости можно изменить цвета виджета, подробные настройки см. в документации
        customization: {
